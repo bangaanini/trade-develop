@@ -1,0 +1,18 @@
+{
+  "$schema": "https://raw.githubusercontent.com/TestSprite/testsprite-cli/v0.6.0/schemas/plan.schema.json",
+  "projectId": "021d009f-3feb-45c1-aedb-3d4f3ede475d",
+  "type": "frontend",
+  "name": "Trade Freedom: Spot and Option trading pages",
+  "planSteps": [
+    {"type": "action", "description": "Login with email superadmin@local.com and password password at https://demo2.tradefreedoms.com/login"},
+    {"type": "assertion", "description": "Login successful"},
+    {"type": "action", "description": "Navigate to /spot page"},
+    {"type": "assertion", "description": "Spot trading page loads with a candlestick chart, order book, and buy/sell order form"},
+    {"type": "action", "description": "Verify the spot page has a symbol selector (e.g. BTC/USDT)"},
+    {"type": "assertion", "description": "A trading pair selector is visible on the spot page"},
+    {"type": "action", "description": "Navigate to /option page"},
+    {"type": "assertion", "description": "Option trading page loads with up/down direction buttons, amount input, duration selector, and price chart"},
+    {"type": "action", "description": "Verify the option page shows a list of available trading pairs"},
+    {"type": "assertion", "description": "Option pairs list is displayed with active symbols"}
+  ]
+}

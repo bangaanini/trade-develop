@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panduan Instalasi & Deployment - BN Trading App</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e293b;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --code-bg: #1e1e1e;
+            --code-text: #e2e8f0;
+            --border-color: #e2e8f0;
+            --accent-color: #3b82f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+        }
+
+        header {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            display: inline-block;
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        ul, ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            background-color: #f1f5f9;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: #d63384;
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+            font-size: 0.9em;
+        }
+
+        .note {
+            background-color: #eff6ff;
+            border-left: 4px solid var(--primary-color);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .warning {
+            background-color: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .tip {
+            background-color: #f0fdf4;
+            border-left: 4px solid #22c55e;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 4px 4px 0;
+        }
+
+        footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .nav {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+        
+        .nav a {
+            margin-right: 1.5rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 1rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .nav {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Dokumentasi Instalasi</h1>
+            <p>Panduan lengkap untuk setup, konfigurasi, dan deployment aplikasi BN Trading.</p>
+        </header>
+
+        <div class="nav">
+            <a href="#manual">Cara 1: Manual (Terminal)</a>
+            <a href="#aapanel">Cara 2: Mudah (aaPanel UI)</a>
+            <a href="#troubleshooting">Troubleshooting</a>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- MANUAL INSTALLATION -->
+        <!-- ========================================== -->
+        <section id="manual">
+            <h2>Cara 1: Instalasi Manual (Via Terminal)</h2>
+            <p>Metode ini disarankan untuk pengguna yang familiar dengan command line Linux (Ubuntu/Debian).</p>
+
+            <h3>1. Persyaratan Sistem</h3>
+            <ul>
+                <li><strong>Node.js</strong>: Versi 18.x atau lebih baru.</li>
+                <li><strong>PostgreSQL</strong>: Database utama.</li>
+                <li><strong>PM2</strong>: Process manager.</li>
+            </ul>
+
+            <h3>2. Install Dependensi</h3>
+            <pre><code># Masuk ke direktori project
+cd bn
+
+# Install dependensi
+npm install</code></pre>
+
+            <h3>3. Konfigurasi Environment (.env)</h3>
+            <p>Buat file <code>.env</code> di root project. Sesuaikan kredensial database:</p>
+            <pre><code>DB_HOST=localhost
+DB_PORT=5432
+DB_USER=trader
+DB_PASSWORD=Rahasia25@
+DB_NAME=trading
+
+NEXTAUTH_URL=http://your-domain.com
+NEXTAUTH_SECRET=your-secret-key
+NODE_ENV=production</code></pre>
+
+            <h3>4. Setup Database Manual</h3>
+            <pre><code>sudo -u postgres psql
+CREATE USER trader WITH PASSWORD 'Rahasia25@';
+CREATE DATABASE trading OWNER trader;
+GRANT ALL PRIVILEGES ON DATABASE trading TO trader;
+\q</code></pre>
+            <p>Lalu restore data:</p>
+            <pre><code>./restore-database.sh backups/backup-terbaru.sql</code></pre>
+
+            <h3>5. Deployment Manual</h3>
+            <pre><code># Build & Start
+npm run build
+pm2 start npm --name "next-app" -- start
+pm2 start npm --name "worker" -- run worker
+pm2 save</code></pre>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- AAPANEL INSTALLATION (NEW) -->
+        <!-- ========================================== -->
+        <section id="aapanel">
+            <h2>Cara 2: Instalasi Mudah (Via aaPanel)</h2>
+            <div class="tip">
+                <strong>Direkomendasikan untuk Pemula!</strong> Metode ini menggunakan Control Panel visual (seperti cPanel) sehingga Anda tidak perlu banyak mengetik kode.
+            </div>
+            
+            <div class="warning">
+                <strong>PENTING:</strong> Gunakan VPS yang masih <strong>KOSONG (Fresh Install)</strong>. Jangan install aaPanel di VPS yang sudah ada websitenya karena akan menyebabkan error.
+            </div>
+
+            <h3>Langkah 1: Install aaPanel</h3>
+            <p>Login ke VPS Anda via SSH (Putty/Terminal) satu kali saja untuk menginstall panel:</p>
+            <pre><code># Untuk Ubuntu/Deepin
+wget -O install.sh http://www.aapanel.com/script/install-ubuntu_6.0_en.sh && sudo bash install.sh aapanel</code></pre>
+            <p>Setelah selesai, terminal akan menampilkan <strong>URL, Username, dan Password</strong>. Simpan data ini!</p>
+
+            <h3>Langkah 2: Login & Install Software</h3>
+            <ol>
+                <li>Buka URL aaPanel di browser Anda.</li>
+                <li>Login dengan username/password yang diberikan.</li>
+                <li>Saat pertama kali login, pilih paket <strong>LNMP</strong> (Recommended).</li>
+                <li>Buka menu <strong>App Store</strong> dan install aplikasi berikut:
+                    <ul>
+                        <li><strong>Node.js Version Manager</strong> (Pilih Node v18/v20).</li>
+                        <li><strong>PostgreSQL Manager</strong> (Versi 14/15).</li>
+                        <li><strong>PM2 Manager</strong>.</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <h3>Langkah 3: Upload File Project</h3>
+            <ol>
+                <li>Buka menu <strong>Files</strong> di aapanel.</li>
+                <li>Masuk ke folder <code>/www/wwwroot/</code>.</li>
+                <li>Klik tombol <strong>Upload</strong> dan upload file project Anda (sebaiknya dalam bentuk .zip).</li>
+                <li>Klik kanan file .zip lalu pilih <strong>Unzip</strong>.</li>
+            </ol>
+
+            <h3>Langkah 4: Setup Database (Visual)</h3>
+            <ol>
+                <li>Buka menu <strong>Databases</strong> > <strong>PostgreSQL</strong>.</li>
+                <li>Klik <strong>Add Database</strong>.</li>
+                <li>Isi <strong>DB Name</strong> (misal: <code>trading</code>), <strong>User</strong> (misal: <code>trader</code>), dan <strong>Password</strong>.</li>
+                <li>Setelah dibuat, klik tombol <strong>Tools</strong> atau <strong>Import</strong> untuk mengupload file backup <code>.sql</code> Anda.</li>
+            </ol>
+            
+            <h3>Langkah 5: Jalankan Aplikasi (Node.js)</h3>
+            <ol>
+                <li>Buka menu <strong>Website</strong> > <strong>Node Project</strong>.</li>
+                <li>Klik <strong>Add Node Project</strong>.</li>
+                <li><strong>Project Path</strong>: Pilih folder project yang sudah di-unzip tadi.</li>
+                <li><strong>Start Command</strong>: <code>npm run start</code> (pastikan sudah dibuild) atau <code>next start</code>.</li>
+                <li><strong>Port</strong>: 3000.</li>
+                <li>Klik <strong>Submit</strong>. Aplikasi akan otomatis berjalan!</li>
+            </ol>
+
+            <h3>Langkah 6: Jalankan Worker</h3>
+            <p>Untuk worker, Anda bisa menambahkannya di <strong>PM2 Manager</strong> secara manual atau jalankan script <code>npm run worker</code> melalui terminal bawaan aaPanel.</p>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TROUBLESHOOTING -->
+        <!-- ========================================== -->
+        <section id="troubleshooting">
+            <h2>Troubleshooting</h2>
+            
+            <h3>Error Koneksi Database</h3>
+            <div class="warning">
+                Pastikan nama database, user, dan password di file <code>.env</code> sama persis dengan yang Anda buat di PostgreSQL/aaPanel.
+            </div>
+
+            <h3>Aplikasi Error 502 Bad Gateway</h3>
+            <p>Ini artinya aplikasi Node.js mati atau restart. Cek log:</p>
+            <pre><code>pm2 logs</code></pre>
+
+            <h3>Worker tidak terhubung ke Binance</h3>
+            <p>Pastikan port outgoing 443 terbuka di Firewall provider VPS Anda (AWS/Google Cloud/DigitalOcean biasanya memblokir beberapa traffic, tapi Port 443 biasanya aman).</p>
+        </section>
+
+        <footer>
+            <p>&copy; 2026 BN Trading App Documentation. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.querySelectorAll('pre').forEach(pre => {
+            const btn = document.createElement('button');
+            btn.className = 'copy-btn';
+            btn.textContent = 'Copy';
+            btn.onclick = () => {
+                const code = pre.querySelector('code').innerText;
+                navigator.clipboard.writeText(code);
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 2000);
+            };
+            pre.appendChild(btn);
+        });
+    </script>
+</body>
+</html>

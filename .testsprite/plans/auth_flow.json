@@ -1,0 +1,17 @@
+{
+  "$schema": "https://raw.githubusercontent.com/TestSprite/testsprite-cli/v0.6.0/schemas/plan.schema.json",
+  "projectId": "021d009f-3feb-45c1-aedb-3d4f3ede475d",
+  "type": "frontend",
+  "name": "Trade Freedom: Login, register, and auth flow",
+  "planSteps": [
+    {"type": "action", "description": "Navigate to https://demo2.tradefreedoms.com/login"},
+    {"type": "assertion", "description": "Login page is displayed with email and password fields"},
+    {"type": "action", "description": "Enter email 'superadmin@local.com' and password 'password' in the login form and click the login button"},
+    {"type": "assertion", "description": "Login succeeds and user is redirected to the dashboard or wallet page"},
+    {"type": "action", "description": "Verify the navigation menu shows authenticated user options like Wallet, Spot Trading, Option Trading"},
+    {"type": "action", "description": "Navigate to /account page"},
+    {"type": "assertion", "description": "Account page shows user profile information"},
+    {"type": "action", "description": "Navigate to /account/security page"},
+    {"type": "assertion", "description": "Security page shows password change and security settings options"}
+  ]
+}

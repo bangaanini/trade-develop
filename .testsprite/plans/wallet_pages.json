@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/TestSprite/testsprite-cli/v0.6.0/schemas/plan.schema.json",
+  "projectId": "021d009f-3feb-45c1-aedb-3d4f3ede475d",
+  "type": "frontend",
+  "name": "Trade Freedom: Wallet, deposit, withdraw, transfer, swap pages",
+  "planSteps": [
+    {"type": "action", "description": "Login with email superadmin@local.com and password password at https://demo2.tradefreedoms.com/login"},
+    {"type": "assertion", "description": "Login successful, redirected to main page"},
+    {"type": "action", "description": "Navigate to /wallet page"},
+    {"type": "assertion", "description": "Wallet page shows balance cards for different wallet types (funding, trading, futures, stocks, mining)"},
+    {"type": "action", "description": "Navigate to /deposit page"},
+    {"type": "assertion", "description": "Deposit page shows deposit methods with QR code or address and coin selection"},
+    {"type": "action", "description": "Navigate to /withdraw page"},
+    {"type": "assertion", "description": "Withdraw page shows withdraw form with amount and address fields"},
+    {"type": "action", "description": "Navigate to /transfer page"},
+    {"type": "assertion", "description": "Transfer page shows wallet balances and direction selector (funding-to-trading or trading-to-funding)"},
+    {"type": "action", "description": "Navigate to /swap page"},
+    {"type": "assertion", "description": "Swap page shows token swap interface with from/to fields"}
+  ]
+}
