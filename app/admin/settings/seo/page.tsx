@@ -31,15 +31,27 @@ export default function SEOSettingsPage() {
     try {
       const res = await fetch('/api/admin/settings');
       const data = await res.json();
-      
+
       if (data.success) {
-        const { seo, contact, social } = data.data.settings;
-        
+        const { seo, contact, social } = data.data.settings || {};
+
+        let keywords: string[] = [];
+        const rawKeywords = seo?.site_keywords;
+        if (Array.isArray(rawKeywords)) {
+          keywords = rawKeywords;
+        } else if (typeof rawKeywords === 'string' && rawKeywords.trim()) {
+          try {
+            keywords = JSON.parse(rawKeywords);
+          } catch (e) {
+            keywords = [];
+          }
+        }
+
         setSeoData({
           site_name: seo?.site_name || "",
           site_title: seo?.site_title || "",
           site_description: seo?.site_description || "",
-          site_keywords: JSON.parse(seo?.site_keywords || "[]"),
+          site_keywords: keywords,
           contact_email: contact?.contact_email || "",
           social_twitter: social?.social_twitter || "",
           social_facebook: social?.social_facebook || "",
