@@ -12,6 +12,14 @@ interface ImageData {
   file_size?: number;
 }
 
+function formatImageUrl(url?: string | null): string {
+  if (!url) return '';
+  if (url.startsWith('/uploads/')) {
+    return `/api${url}`;
+  }
+  return url;
+}
+
 export default function ImageManagerPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -137,12 +145,11 @@ export default function ImageManagerPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div>
               {images.hero_bg?.file_url && (
-                <div className="relative w-full h-48 bg-background rounded-lg overflow-hidden mb-4">
-                  <Image
-                    src={images.hero_bg.file_url}
+                <div className="relative w-full h-48 bg-background rounded-lg overflow-hidden mb-4 border border-border">
+                  <img
+                    src={formatImageUrl(images.hero_bg.file_url)}
                     alt="Hero Background"
-                    fill
-                    className="object-cover"
+                    className="w-full h-full object-cover"
                   />
                 </div>
               )}
@@ -186,12 +193,11 @@ export default function ImageManagerPage() {
               <div key={key}>
                 <h3 className="font-medium mb-3">Slide {index + 1}</h3>
                 {images[key]?.file_url && (
-                  <div className="relative w-full h-48 bg-background rounded-lg overflow-hidden mb-3">
-                    <Image
-                      src={images[key].file_url}
+                  <div className="relative w-full h-48 bg-background rounded-lg overflow-hidden mb-3 border border-border">
+                    <img
+                      src={formatImageUrl(images[key].file_url)}
                       alt={`Slide ${index + 1}`}
-                      fill
-                      className="object-cover"
+                      className="w-full h-full object-cover"
                     />
                   </div>
                 )}
@@ -236,12 +242,11 @@ export default function ImageManagerPage() {
             <div>
               <h3 className="font-medium mb-3">Site Logo</h3>
               {images.logo?.file_url && (
-                <div className="relative w-32 h-32 bg-background rounded-lg overflow-hidden mb-3 mx-auto">
-                  <Image
-                    src={images.logo.file_url}
+                <div className="relative w-32 h-32 bg-background rounded-lg overflow-hidden mb-3 mx-auto border border-border flex items-center justify-center p-2">
+                  <img
+                    src={formatImageUrl(images.logo.file_url)}
                     alt="Logo"
-                    fill
-                    className="object-contain p-2"
+                    className="max-w-full max-h-full object-contain"
                   />
                 </div>
               )}
@@ -277,12 +282,11 @@ export default function ImageManagerPage() {
             <div>
               <h3 className="font-medium mb-3">Open Graph Image</h3>
               {images.og_image?.file_url && (
-                <div className="relative w-full h-32 bg-background rounded-lg overflow-hidden mb-3">
-                  <Image
-                    src={images.og_image.file_url}
+                <div className="relative w-full h-32 bg-background rounded-lg overflow-hidden mb-3 border border-border">
+                  <img
+                    src={formatImageUrl(images.og_image.file_url)}
                     alt="OG Image"
-                    fill
-                    className="object-cover"
+                    className="w-full h-full object-cover"
                   />
                 </div>
               )}

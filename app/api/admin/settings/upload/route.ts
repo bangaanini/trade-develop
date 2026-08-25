@@ -55,7 +55,10 @@ export async function POST(req: Request) {
     // Upload via central uploadFile function (R2 + local fallback)
     const uploaded = await uploadFile(file, '', fileName);
 
-    const fileUrl = uploaded.url;
+    let fileUrl = uploaded.url;
+    if (fileUrl.startsWith('/uploads/')) {
+      fileUrl = `/api${fileUrl}`;
+    }
     const filePath = join(process.cwd(), 'public', 'uploads', fileName);
 
     // Save to database

@@ -48,9 +48,9 @@ sudo systemctl enable postgresql
 sudo -u postgres psql
 
 # Dalam psql CLI:
-CREATE USER trader WITH PASSWORD 'Rahasia25@';
-CREATE DATABASE trading OWNER trader;
-GRANT ALL PRIVILEGES ON DATABASE trading TO trader;
+CREATE USER trader2 WITH PASSWORD 'Rahasia25@';
+CREATE DATABASE trading2 OWNER trader2;
+GRANT ALL PRIVILEGES ON DATABASE trading2 TO trader2;
 \q
 ```
 
@@ -70,9 +70,9 @@ nano .env
 ```env
 DB_HOST=localhost
 DB_PORT=5432
-DB_USER=trader
+DB_USER=trader2
 DB_PASSWORD=Rahasia25@
-DB_NAME=trading
+DB_NAME=trading2
 
 # Tambahkan juga config lainnya
 NEXTAUTH_SECRET=your-random-secret-here
@@ -91,7 +91,7 @@ chmod +x restore-database.sh
 ./restore-database.sh backups/backup-2026-01-07-070402.sql
 
 # Atau manual:
-PGPASSWORD="Rahasia25@" psql -h localhost -U trader -d trading -f backups/backup-2026-01-07-070402.sql
+PGPASSWORD="Rahasia25@" psql -h localhost -U trader2 -d trading2 -f backups/backup-2026-01-07-070402.sql
 ```
 
 **Output jika berhasil:**
@@ -142,10 +142,8 @@ npm run build
 npm install -g pm2
 
 # Start Web App
-pm2 start npm --name "next-app" -- start
-
-# Start Worker
-pm2 start npm --name "worker" -- run worker
+PORT=3008 pm2 start npm --name "demo2" -- start
+PORT=3008 pm2 start npm --name "worker2" -- run worker
 
 # Save PM2 config
 pm2 save

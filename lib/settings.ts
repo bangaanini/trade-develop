@@ -169,20 +169,31 @@ export async function updateSettings(
   }
 }
 
+export function formatImageUrl(url?: string | null): string | null {
+  if (!url) return null;
+  if (url.startsWith('/uploads/')) {
+    return `/api${url}`;
+  }
+  return url;
+}
+
 export async function getAllImages(): Promise<Record<string, UploadedImage>> {
   try {
     const client = await db.connect();
-    
+
     try {
       const { rows } = await client.query(
         'SELECT * FROM uploaded_images ORDER BY image_key'
       );
-      
+
       const images: Record<string, UploadedImage> = {};
       rows.forEach((row: UploadedImage) => {
-        images[row.image_key] = row;
+        images[row.image_key] = {
+          ...row,
+          file_url: formatImageUrl(row.file_url) || row.file_url,
+        };
       });
-      
+
       return images;
     } finally {
       client.release();
@@ -197,14 +208,20 @@ export async function getAllImages(): Promise<Record<string, UploadedImage>> {
 export async function getImage(imageKey: string): Promise<UploadedImage | null> {
   try {
     const client = await db.connect();
-    
+
     try {
       const { rows } = await client.query(
         'SELECT * FROM uploaded_images WHERE image_key = $1',
         [imageKey]
       );
-      
-      return rows[0] || null;
+
+      if (rows.length === 0) return null;
+
+      const img = rows[0];
+      return {
+        ...img,
+        file_url: formatImageUrl(img.file_url) || img.file_url,
+      };
     } finally {
       client.release();
     }

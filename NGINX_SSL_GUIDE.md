@@ -185,8 +185,6 @@ sudo rm /etc/nginx/sites-enabled/default
 
 # Test Nginx configuration
 sudo nginx -t
-
-# If test passes, reload Nginx
 sudo systemctl reload nginx
 ```
 
