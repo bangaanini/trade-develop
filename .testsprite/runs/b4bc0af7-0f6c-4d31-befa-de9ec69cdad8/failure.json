@@ -1,9 +1,0 @@
-{
-  "rootCauseHypothesis": "trading balance did not increase {'funding': 3309.304814260071, 'trading': 6876.914175, 'futures': 550.073193508493, 'stocks': 6207.4498147182785, 'mining': 3557.60274055} {'funding': 1809.304814260071, 'trading': 4376.914175, 'futures': 550.073193508493, 'stocks': 6207.4498147182785, 'mining': 2552.60274055}",
-  "recommendedFixTarget": {
-    "kind": "unknown",
-    "reference": "funding",
-    "rationale": null
-  },
-  "evidence": []
-}
