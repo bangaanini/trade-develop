@@ -20,8 +20,11 @@
 # production
 /build
 
-/.testsprite
-/.claude
+# testing & AI tools
+.testsprite
+.testsprite/
+.claude
+.claude/
 # misc
 .DS_Store
 *.pem
