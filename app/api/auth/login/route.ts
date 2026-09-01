@@ -30,6 +30,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
+    if (user.banned) {
+      return NextResponse.json({ error: "Your account has been banned. Please contact support." }, { status: 403 });
+    }
+
     const token = signToken({ id: user.id, email: user.email, role: user.role });
 
     const cookieStore = await cookies();

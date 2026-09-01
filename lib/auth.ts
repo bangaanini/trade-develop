@@ -40,6 +40,15 @@ export async function getSession() {
   if (!token) return null;
 
   const session = verifyToken(token);
+  if (!session) return null;
+
+  // Check if user is banned
+  const { db } = await import('@/lib/db');
+  const { rows } = await db.query("SELECT banned FROM users WHERE id = $1", [session.id]);
+  if (rows.length === 0 || rows[0].banned) {
+    return null;
+  }
+
   return session;
 }
 

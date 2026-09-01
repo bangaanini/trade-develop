@@ -45,10 +45,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: `Minimum withdrawal is ${minAmount} ${coin}` }, { status: 400 });
     }
 
-    // 1. Verify Password
-    const { rows: users } = await db.query("SELECT password_hash FROM users WHERE id = $1", [userId]);
+    // 1. Verify Password & Check Ban Status
+    const { rows: users } = await db.query("SELECT password_hash, banned FROM users WHERE id = $1", [userId]);
     const user = users[0];
     if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+
+    if (user.banned) {
+      return NextResponse.json({ error: "Your account has been banned. Withdrawals are disabled." }, { status: 403 });
+    }
 
     const isPasswordValid = await comparePassword(password, user.password_hash);
     if (!isPasswordValid) {
