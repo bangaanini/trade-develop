@@ -353,52 +353,111 @@ export default function AdvancedChart({ symbol, className }: Props) {
 
         setLoading(false);
 
-        const wsInterval = interval.toLowerCase();
-        
-        let wsUrl = "";
-        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        
-        // Ensure symbol for WS also handles USDT correctly
+        const is1s = interval === "1s";
         const wsSymbol = symbol.toUpperCase().endsWith("USDT") ? symbol.toLowerCase() : `${symbol.toLowerCase()}usdt`;
+        const streamName = is1s ? `${wsSymbol}@trade` : `${wsSymbol}@kline_${interval.toLowerCase()}`;
 
-        if (isLocal) {
-            // Local Development: Connect directly (requires VPN in blocked regions)
-            wsUrl = `wss://stream.binance.com:9443/ws/${wsSymbol}@kline_${wsInterval}`;
-            console.log("Using Direct Binance WebSocket (Localhost detected)");
-        } else {
-            // Production: Use Nginx Proxy
-            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const host = window.location.host;
-            wsUrl = `${protocol}//${host}/binance-ws/ws/${wsSymbol}@kline_${wsInterval}`;
+        let current1sCandle: any = null;
+        let pollTimer: any = null;
+
+        const startPollingFallback = () => {
+          if (pollTimer || !isMounted) return;
+          console.log("Starting 1s polling fallback for chart...");
+          pollTimer = setInterval(async () => {
+            if (!isMounted) return;
+            try {
+              const res = await fetch(`/api/binance/proxy/klines?symbol=${pair}&interval=1m&limit=1`);
+              if (res.ok) {
+                const latest = await res.json();
+                if (Array.isArray(latest) && latest.length > 0) {
+                  const d = latest[0];
+                  const timeSec = (is1s ? Math.floor(Date.now() / 1000) : Math.floor(d[0] / 1000)) as Time;
+                  const close = parseFloat(d[4]);
+                  const updatedCandle = {
+                    time: timeSec,
+                    open: parseFloat(d[1]),
+                    high: Math.max(parseFloat(d[2]), close),
+                    low: Math.min(parseFloat(d[3]), close),
+                    close: close,
+                  };
+                  if (candleSeriesRef.current) candleSeriesRef.current.update(updatedCandle);
+                }
+              }
+            } catch (e) {
+              console.error("Polling fallback error:", e);
+            }
+          }, 1000);
+        };
+
+        const directWsUrl = `wss://stream.binance.com:9443/ws/${streamName}`;
+        try {
+          ws = new WebSocket(directWsUrl);
+
+          ws.onopen = () => {
+            console.log(`Connected to Binance WS: ${directWsUrl}`);
+          };
+
+          ws.onmessage = (event) => {
+            try {
+              const message = JSON.parse(event.data);
+
+              if (is1s && message.e === "trade") {
+                const price = parseFloat(message.p);
+                const timeSec = Math.floor(message.E / 1000) as Time;
+
+                if (current1sCandle && current1sCandle.time === timeSec) {
+                  current1sCandle.high = Math.max(current1sCandle.high, price);
+                  current1sCandle.low = Math.min(current1sCandle.low, price);
+                  current1sCandle.close = price;
+                } else {
+                  current1sCandle = {
+                    time: timeSec,
+                    open: price,
+                    high: price,
+                    low: price,
+                    close: price,
+                  };
+                }
+
+                if (candleSeriesRef.current) candleSeriesRef.current.update(current1sCandle);
+              } else if (message.k) {
+                const k = message.k;
+                const close = parseFloat(k.c);
+                const t = (k.t / 1000) as Time;
+                const updatedCandle = {
+                  time: t,
+                  open: parseFloat(k.o),
+                  high: parseFloat(k.h),
+                  low: parseFloat(k.l),
+                  close: close,
+                };
+                const updatedVolume = {
+                  time: t,
+                  value: parseFloat(k.v),
+                  color: close >= parseFloat(k.o) ? currentTheme.upColor : currentTheme.downColor,
+                };
+
+                if (candleSeriesRef.current) candleSeriesRef.current.update(updatedCandle);
+                if (volumeSeriesRef.current) volumeSeriesRef.current.update(updatedVolume);
+              }
+            } catch (err) {
+              console.error("WS message parse error:", err);
+            }
+          };
+
+          ws.onerror = (error) => {
+            console.warn("Binance WebSocket error, starting polling fallback...");
+            startPollingFallback();
+          };
+
+          ws.onclose = () => {
+            console.warn("Binance WebSocket closed, starting polling fallback...");
+            startPollingFallback();
+          };
+        } catch (wsErr) {
+          console.warn("Failed to create WebSocket, using polling fallback:", wsErr);
+          startPollingFallback();
         }
-
-        ws = new WebSocket(wsUrl);
-        
-        ws.onopen = () => {
-            console.log(`Connected to Binance WebSocket (${isLocal ? 'Direct' : 'Proxy'})`);
-        };
-
-        ws.onmessage = (event) => {
-            const message = JSON.parse(event.data);
-            const k = message.k;
-            const close = parseFloat(k.c);
-            const t = k.t / 1000 as Time;
-            const updatedCandle = {
-                time: t,
-                open: parseFloat(k.o),
-                high: parseFloat(k.h),
-                low: parseFloat(k.l),
-                close: close,
-            };
-            const updatedVolume = {
-                time: t,
-                value: parseFloat(k.v),
-                color: close >= parseFloat(k.o) ? currentTheme.upColor : currentTheme.downColor
-            };
-
-            if (candleSeriesRef.current) candleSeriesRef.current.update(updatedCandle);
-            if (volumeSeriesRef.current) volumeSeriesRef.current.update(updatedVolume);
-        };
 
       } catch (err) {
         console.error("Failed to load chart data:", err);
@@ -407,7 +466,7 @@ export default function AdvancedChart({ symbol, className }: Props) {
     };
 
     fetchData();
-    return () => { isMounted = false; if (ws) ws.close(); };
+    return () => { isMounted = false; if (ws) ws.close(); if (pollTimer) clearInterval(pollTimer); };
   }, [symbol, interval, currentTheme]);
 
   // Sidebar Tool Component

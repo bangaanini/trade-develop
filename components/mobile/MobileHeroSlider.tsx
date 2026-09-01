@@ -1,6 +1,9 @@
 import { getAllImages, formatImageUrl } from '@/lib/settings';
 import MobileHeroSliderClient from './MobileHeroSliderClient';
 
+export const revalidate = 0;
+export const dynamic = 'force-dynamic';
+
 export default async function MobileHeroSlider() {
   // Fetch slider images from database
   const images = await getAllImages();

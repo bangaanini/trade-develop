@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { updateSettings } from '@/lib/settings';
 import { verifyAuth } from '@/lib/auth';
+import { revalidatePath } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,6 +36,9 @@ export async function POST(req: Request) {
         { status: 500 }
       );
     }
+
+    // Invalidate Next.js cache so SEO and site settings update immediately
+    revalidatePath('/', 'layout');
 
     return NextResponse.json({
       success: true,

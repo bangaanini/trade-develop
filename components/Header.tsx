@@ -12,24 +12,34 @@ export default function Header() {
   const [lastScroll, setLastScroll] = useState(0);
 
   const [user, setUser] = useState<any>(null);
+  const [logoUrl, setLogoUrl] = useState<string>("/logo.png");
   const [menuOpen, setMenuOpen] = useState(false);
   const { t } = useLanguage();
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    async function loadUser() {
+    async function loadData() {
       try {
-        const res = await fetch("/api/auth/me");
-        if (res.ok) {
-          const data = await res.json();
+        const [meRes, settingsRes] = await Promise.all([
+          fetch("/api/auth/me"),
+          fetch("/api/settings/public")
+        ]);
+        if (meRes.ok) {
+          const data = await meRes.json();
           setUser(data.user);
         }
+        if (settingsRes.ok) {
+          const sData = await settingsRes.json();
+          if (sData.data?.images?.logo?.file_url) {
+            setLogoUrl(sData.data.images.logo.file_url);
+          }
+        }
       } catch (error) {
-        console.error("Failed to load user", error);
+        console.error("Failed to load header data", error);
       }
     }
-    loadUser();
+    loadData();
   }, []);
 
   useEffect(() => {
@@ -90,7 +100,7 @@ export default function Header() {
         {/* LOGO */}
         <div className="flex items-center gap-3">
           <Link href="/">
-            <img src="/logo.png" alt="logo" className="w-28 h-13 rounded-2xl shadow-lg" />
+            <img src={logoUrl} alt="logo" className="w-28 h-13 rounded-2xl shadow-lg object-contain" />
           </Link>
         </div>
 

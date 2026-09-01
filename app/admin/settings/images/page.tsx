@@ -33,6 +33,7 @@ export default function ImageManagerPage() {
     mobile_slide2: useRef<HTMLInputElement>(null),
     mobile_slide3: useRef<HTMLInputElement>(null),
     logo: useRef<HTMLInputElement>(null),
+    favicon: useRef<HTMLInputElement>(null),
     og_image: useRef<HTMLInputElement>(null),
   };
 
@@ -60,9 +61,9 @@ export default function ImageManagerPage() {
     if (!file) return;
 
     // Validate file type
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
-    if (!allowedTypes.includes(file.type)) {
-      toast.error('Only JPEG, PNG, and WebP images are allowed');
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg', 'image/x-icon', 'image/vnd.microsoft.icon', 'image/ico'];
+    if (!allowedTypes.includes(file.type) && !file.name.endsWith('.ico')) {
+      toast.error('Only JPEG, PNG, WebP, and ICO files are allowed');
       return;
     }
 
@@ -234,10 +235,10 @@ export default function ImageManagerPage() {
           </p>
         </div>
 
-        {/* Logo & OG Image */}
+        {/* Logo, Favicon & OG Image */}
         <div className="bg-card border border-border rounded-lg p-6">
           <h2 className="text-xl font-semibold mb-4">Branding Assets</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Logo */}
             <div>
               <h3 className="font-medium mb-3">Site Logo</h3>
@@ -272,8 +273,48 @@ export default function ImageManagerPage() {
               <input
                 ref={fileInputRefs.logo}
                 type="file"
-                accept="image/png,image/webp"
+                accept="image/png,image/webp,image/jpeg"
                 onChange={(e) => handleFileSelect('logo', e)}
+                className="hidden"
+              />
+            </div>
+
+            {/* Favicon */}
+            <div>
+              <h3 className="font-medium mb-3">Favicon</h3>
+              {images.favicon?.file_url && (
+                <div className="relative w-32 h-32 bg-background rounded-lg overflow-hidden mb-3 mx-auto border border-border flex items-center justify-center p-2">
+                  <img
+                    src={formatImageUrl(images.favicon.file_url)}
+                    alt="Favicon"
+                    className="w-16 h-16 object-contain"
+                  />
+                </div>
+              )}
+              <div className="text-xs text-muted-foreground text-center mb-3">
+                <div>{images.favicon?.file_name || 'favicon.ico'}</div>
+                <div>{formatFileSize(images.favicon?.file_size)}</div>
+                <div className="mt-1">Recommended: 32x32px or 64x64px (.ico, .png)</div>
+              </div>
+              <button
+                onClick={() => fileInputRefs.favicon.current?.click()}
+                disabled={uploading === 'favicon'}
+                className="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 text-sm flex items-center justify-center gap-2"
+              >
+                {uploading === 'favicon' ? (
+                  <>
+                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                    Uploading...
+                  </>
+                ) : (
+                  'Upload Favicon'
+                )}
+              </button>
+              <input
+                ref={fileInputRefs.favicon}
+                type="file"
+                accept="image/x-icon,image/png,image/ico"
+                onChange={(e) => handleFileSelect('favicon', e)}
                 className="hidden"
               />
             </div>

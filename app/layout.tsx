@@ -6,8 +6,13 @@ import { siteConfig } from "@/config/site";
 import type { Metadata, Viewport } from "next";
 import { Toaster } from "react-hot-toast";
 
-// Generate default metadata
-export const metadata: Metadata = generateSEOMetadata();
+export const revalidate = 0;
+export const dynamic = 'force-dynamic';
+
+// Generate dynamic metadata from database
+export async function generateMetadata(): Promise<Metadata> {
+  return await generateSEOMetadata();
+}
 
 // Viewport configuration
 export const viewport: Viewport = {
@@ -21,7 +26,6 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  // Structured data for SEO
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "FinancialService",
@@ -50,10 +54,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="manifest" href="/manifest.json" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="TradeFreedom" />
-        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
-
-        {/* JSON-LD Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
@@ -63,10 +63,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteSchema) }}
         />
       </head>
-      <body>
+      <body className="bg-background text-foreground antialiased min-h-screen">
         <Providers>
           <ClientLayout>{children}</ClientLayout>
-          <Toaster position="top-center" reverseOrder={false} />
+          <Toaster position="top-right" />
         </Providers>
       </body>
     </html>

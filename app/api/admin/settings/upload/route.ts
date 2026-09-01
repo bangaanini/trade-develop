@@ -3,6 +3,7 @@ import { join } from 'path';
 import { saveImage } from '@/lib/settings';
 import { verifyAuth } from '@/lib/auth';
 import { uploadFile } from '@/lib/upload';
+import { revalidatePath } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,10 +31,10 @@ export async function POST(req: Request) {
     }
 
     // Validate file type
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg', 'image/x-icon', 'image/vnd.microsoft.icon'];
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
-        { error: 'Invalid file type. Only JPEG, PNG, and WebP are allowed.' },
+        { error: 'Invalid file type. Only JPEG, PNG, WebP, and ICO are allowed.' },
         { status: 400 }
       );
     }
@@ -73,6 +74,9 @@ export async function POST(req: Request) {
       },
       user.id
     );
+
+    // Invalidate Next.js cache so the whole website reflects new image immediately
+    revalidatePath('/', 'layout');
 
     return NextResponse.json({
       success: true,
