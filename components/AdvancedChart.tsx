@@ -286,6 +286,7 @@ export default function AdvancedChart({ symbol, className }: Props) {
     setLoading(true);
 
     let ws: WebSocket | null = null;
+    let pollTimer: any = null;
     let isMounted = true;
 
     const fetchData = async () => {
@@ -358,12 +359,11 @@ export default function AdvancedChart({ symbol, className }: Props) {
         const streamName = is1s ? `${wsSymbol}@trade` : `${wsSymbol}@kline_${interval.toLowerCase()}`;
 
         let current1sCandle: any = null;
-        let pollTimer: any = null;
 
         const startPollingFallback = () => {
           if (pollTimer || !isMounted) return;
           console.log("Starting 1s polling fallback for chart...");
-          pollTimer = setInterval(async () => {
+          pollTimer = window.setInterval(async () => {
             if (!isMounted) return;
             try {
               const res = await fetch(`/api/binance/proxy/klines?symbol=${pair}&interval=1m&limit=1`);
@@ -466,7 +466,11 @@ export default function AdvancedChart({ symbol, className }: Props) {
     };
 
     fetchData();
-    return () => { isMounted = false; if (ws) ws.close(); if (pollTimer) clearInterval(pollTimer); };
+    return () => {
+      isMounted = false;
+      if (ws) ws.close();
+      if (pollTimer) window.clearInterval(pollTimer);
+    };
   }, [symbol, interval, currentTheme]);
 
   // Sidebar Tool Component
