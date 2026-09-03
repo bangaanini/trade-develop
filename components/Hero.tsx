@@ -5,9 +5,12 @@ export const revalidate = 0;
 export const dynamic = 'force-dynamic';
 
 export default async function Hero() {
-  // Fetch hero background image from database
+  // Fetch hero background and logo images from database
   const heroImage = await getImage('hero_bg');
-  const imageUrl = heroImage?.file_url || '/banner.png';
+  const logoImage = await getImage('logo');
 
-  return <HeroClient imageUrl={imageUrl} />;
+  const imageUrl = heroImage?.file_url || '/banner.png';
+  const logoUrl = logoImage?.file_url || '/logo.png';
+
+  return <HeroClient imageUrl={imageUrl} logoUrl={logoUrl} />;
 }

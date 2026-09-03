@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 
 interface HeroClientProps {
   imageUrl: string;
+  logoUrl?: string;
 }
 
-export default function HeroClient({ imageUrl }: HeroClientProps) {
+export default function HeroClient({ imageUrl, logoUrl }: HeroClientProps) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -26,8 +27,10 @@ export default function HeroClient({ imageUrl }: HeroClientProps) {
     checkAuth();
   }, []);
 
+  const displayLogo = logoUrl || "/logo.png";
+
   return (
-    <section 
+    <section
       className="hidden md:block relative bg-[#11224a] text-white pt-20 pb-24 min-h-[600px] items-center justify-center"
       style={{
         backgroundImage: `linear-gradient(rgba(17, 34, 74, 0.7), rgba(17, 34, 74, 0.7)), url(${imageUrl})`,
@@ -37,8 +40,14 @@ export default function HeroClient({ imageUrl }: HeroClientProps) {
       }}
     >
       <div className="max-w-4xl mx-auto text-center px-6 py-20">
-        {/* Main Heading */}
-        <img src="/hero.png" alt="logo" className="w-1/2 h-1/2 mx-auto" />
+        {/* Main Heading / Hero Logo */}
+        <div className="flex justify-center mb-6">
+          <img
+            src={displayLogo}
+            alt="logo"
+            className="max-w-[320px] max-h-[160px] object-contain mx-auto drop-shadow-xl"
+          />
+        </div>
 
         {/* Subtitle */}
         <p className="text-3xl md:text-4xl font-bold text-gray-200 mb-8 max-w-2xl mx-auto">
